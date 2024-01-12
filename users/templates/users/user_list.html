@@ -1,0 +1,78 @@
+{% extends "home.html" %}
+
+{% block maincontent %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <div id="headerbar">
+                <h1 class="headerbar-title">{{ title }}</h1>
+
+                <div class="headerbar-item float-end mx-2">
+                    <a class="btn btn-sm btn-primary" href="{% url 'users:create' %}">
+                        <i class="fa fa-plus"></i>New</a>
+                </div>
+
+                <div class="headerbar-item float-end">
+                    <div class="model-pager btn-group btn-group-sm">
+                        <a class="btn btn-default disabled" href="#" title="First"><i class="fa fa-fast-backward no-margin"></i></a>
+                        <a class="btn btn-default disabled" href="#" title="Prev"><i class="fa fa-backward no-margin"></i></a>
+                        <a class="btn btn-default disabled" href="#" title="Next"><i class="fa fa-forward no-margin"></i></a>
+                        <a class="btn btn-default disabled" href="#" title="Last"><i class="fa fa-fast-forward no-margin"></i></a>
+                    </div>    
+                </div>
+
+            </div>
+
+            <div id="content" class="table-content">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>User Type</th>
+                                <th>Email Address</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.get_full_name }} - {{ user.pk }}</td>
+                                <td>{{ user.user_type }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-cog"></i> Options
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                          <li><a class="dropdown-item" href="{% url 'users:update' user.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                                          <li>
+                                            <a class="dropdown-item" hx-get="{% url 'users:delete' user.pk %}" style="cursor:pointer"
+                                            hx-target="#modals-here" hx-trigger="click"
+                                            data-bs-toggle="modal" data-bs-target="#modals-here"><i class="fa fa-trash"></i> Delete</a>
+                                          </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="modals-here"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+</div>
+{% endblock maincontent %}

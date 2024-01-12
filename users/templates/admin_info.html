@@ -1,0 +1,147 @@
+{% if is_staff == "True" %}
+  <hr />
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <div id="div_id_user_address_1" class="form-floating mb-3 mb-md-0">
+        <input
+          type="text"
+          name="user_address_1"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_address_1"
+          required
+          id="id_user_address_1"
+          value={{user_address_1}}
+        />
+        <label for="id_user_address_1">
+          Address Line 1<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div id="div_id_user_address_2" class="form-floating mb-3">
+        <input
+          type="text"
+          name="user_address_2"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_address_2"
+          required
+          id="id_user_address_2"
+          value={{user_address_2}}
+        />
+        <label for="id_user_address_2">
+          Address Line 2<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-5">
+      <div id="div_id_user_city" class="form-floating mb-3 mb-md-0">
+        <input
+          type="text"
+          name="user_city"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_city"
+          required
+          id="id_user_city"
+          value={{user_city}}
+        />
+        <label for="id_user_city">
+          City<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div id="div_id_user_state" class="form-floating mb-3">
+        <input
+          type="text"
+          name="user_state"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_state"
+          required
+          id="id_user_state"
+          value={{user_state}}
+        />
+        <label for="id_user_state">
+          State<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div id="div_id_user_zip" class="form-floating mb-3">
+        <input
+          type="text"
+          name="user_zip"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_zip"
+          required
+          id="id_user_zip"
+          value={{user_zip}}
+        />
+        <label for="id_user_zip">
+          Zip<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <div id="div_id_user_phone" class="form-floating mb-3 mb-md-0">
+        <input
+          type="text"
+          name="user_phone"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_phone"
+          required
+          id="id_user_phone"
+          value={{user_phone}}
+        />
+        <label for="id_user_phone">
+          Phone<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="div_id_user_fax" class="form-floating mb-3">
+        <input
+          type="text"
+          name="user_fax"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_fax"
+          required
+          id="id_user_fax"
+          value={{user_fax}}
+        />
+        <label for="id_user_fax">
+          Fax<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="div_id_user_mobile" class="form-floating mb-3">
+        <input
+          type="text"
+          name="user_mobile"
+          maxlength="100"
+          class="textinput form-control"
+          placeholder="user_mobile"
+          required
+          id="id_user_mobile"
+          value={{user_mobile}}
+        />
+        <label for="id_user_mobile">
+          Mobile<span class="asteriskField">*</span>
+        </label>
+      </div>
+    </div>
+  </div>
+{% else %}
+{% endif %}
