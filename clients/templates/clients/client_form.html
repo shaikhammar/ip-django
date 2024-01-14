@@ -1,0 +1,111 @@
+{% extends "home.html" %}
+{% load crispy_forms_tags %}
+{% load django_htmx %}
+{% block maincontent %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container">
+            {% comment %} {% for field in form %} {% endcomment %}
+            <form method="post">
+            {% csrf_token %}
+                <div class="row">
+                    <h3 class="col">{{ title }} Form</h3>
+                    <div class="col d-flex flex-row-reverse mt-2">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-success" type="submit"><i class="fa fa-check"></i> Save</button>
+                            <button type="button" onclick="window.history.back()" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Client Information
+                                <div class="float-end">
+                                    {{ form.client_active|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-floating">
+                                    {{ form.client_name }}
+                                    {{ form.client_name.label_tag }}
+                                    {{ form.client_name.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_address_1 }}
+                                    {{ form.client_address_1.label_tag }}
+                                    {{ form.client_address_1.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_address_2 }}
+                                    {{ form.client_address_2.label_tag }}
+                                    {{ form.client_address_2.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_city }}
+                                    {{ form.client_city.label_tag }}
+                                    {{ form.client_city.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_state }}
+                                    {{ form.client_state.label_tag }}
+                                    {{ form.client_state.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_country }}
+                                    {{ form.client_country.label_tag }}
+                                    {{ form.client_country.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-header">
+                                Client Contact Information
+                            </div>
+                            <div class="card-body">
+                                <div class="form-floating">
+                                    {{ form.client_phone }}
+                                    {{ form.client_phone.label_tag }}
+                                    {{ form.client_phone.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_fax }}
+                                    {{ form.client_fax.label_tag }}
+                                    {{ form.client_fax.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_mobile }}
+                                    {{ form.client_mobile.label_tag }}
+                                    {{ form.client_mobile.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_email }}
+                                    {{ form.client_email.label_tag }}
+                                    {{ form.client_email.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_web }}
+                                    {{ form.client_web.label_tag }}
+                                    {{ form.client_web.errors }}
+                                </div>
+                                <div class="form-floating">
+                                    {{ form.client_currency }}
+                                    {{ form.client_currency.label_tag }}
+                                    {{ form.client_currency.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        </div>
+            {% comment %} {% endfor %} {% endcomment %}
+        </div>
+    </main>
+</div>
+{% endblock maincontent %}

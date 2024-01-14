@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 class Client(models.Model):
     client_date_created = models.DateField(_("date created"), auto_now_add=True)
     client_date_modified = models.DateField(_("date modified"), auto_now=True)
-    client_name = models.CharField(_("name"), max_length=150, default='', blank=True)
+    client_name = models.CharField(_("client name"), max_length=150, default='', blank=True)
     client_address_1 = models.CharField(_("address line 1"), max_length=150, default='', blank=True)
     client_address_2 = models.CharField(_("address line 2"), max_length=150, default='', blank=True)
     client_city = models.ForeignKey("address.City", verbose_name=_("city"), on_delete=models.SET_NULL, null=True, blank=True)
@@ -25,4 +25,8 @@ class Client(models.Model):
 
     def __unicode__(self):
         return self.client_name
+    
+    @property
+    def client_invoice_balance():
+        return "$100.00"
 

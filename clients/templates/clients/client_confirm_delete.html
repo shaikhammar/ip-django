@@ -1,0 +1,16 @@
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'clients:delete' client.pk %}">{% csrf_token %}
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+      </div>
+      <div class="modal-body">
+          <p>Are you sure you want to delete "{{ client.client_name }}"?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Confirm</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+  </div>

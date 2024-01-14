@@ -1,4 +1,4 @@
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="{% url "ip" %}">IP-Django</a>
     <!-- Sidebar Toggle
@@ -7,8 +7,8 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarCogs" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Clients</a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarCogs">
-                <li><a class="dropdown-item" href="#">Add Clients</a></li>
-                <li><a class="dropdown-item" href="#">View Clients</a></li>
+                <li><a class="dropdown-item" href="{% url 'clients:create' %}">Add Clients</a></li>
+                <li><a class="dropdown-item" href="{% url 'clients:list' %}">View Clients</a></li>
             </ul>
         </li>
     </ul>
