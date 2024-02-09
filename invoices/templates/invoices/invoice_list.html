@@ -8,7 +8,7 @@
                 <h1 class="headerbar-title">{{ title }}</h1>
 
                 <div class="headerbar-item float-end mx-2">
-                    <a class="btn btn-sm btn-primary" href="{% url 'clients:create' %}">
+                    <a class="btn btn-sm btn-primary" href="{% url 'invoices:create' %}">
                         <i class="fa fa-plus"></i>New</a>
                 </div>
 
@@ -23,9 +23,9 @@
 
                 <div class="headerbar-item float-end mx-2">
                     <div class="btn-group btn-group-sm index-options">
-                        <a href="{% url 'clients:list' active='active' %}" class="btn btn-outline-primary {% if active == "active" %}active{% endif %}">Active</a>
-                        <a href="{% url 'clients:list' active='inactive' %}" class="btn btn-outline-primary {% if active == "inactive" %}active{% endif %}">Inactive</a>
-                        <a href="{% url 'clients:list' %}" class="btn btn-outline-primary {% if not active %}active{% endif %}">All</a>
+                        <a href="{% url 'invoices:list' active='active' %}" class="btn btn-outline-primary {% if active == "active" %}active{% endif %}">Active</a>
+                        <a href="{% url 'invoices:list' active='inactive' %}" class="btn btn-outline-primary {% if active == "inactive" %}active{% endif %}">Inactive</a>
+                        <a href="{% url 'invoices:list' %}" class="btn btn-outline-primary {% if not active %}active{% endif %}">All</a>
                     </div>
                 </div>
 
@@ -37,9 +37,9 @@
 
                         <thead>
                             <tr>
-                                <th>Active</th>
+                                <th>Status</th>
+                                <th>Invoice Number</th>
                                 <th>Client Name</th>
-                                <th>Email Address</th>
                                 <th>Phone Number</th>
                                 <th>Balance</th>
                                 <th>Options</th>
@@ -47,26 +47,26 @@
                         </thead>
 
                         <tbody>
-                            {% for client in clients %}
+                            {% for invoice in invoices %}
                             <tr>
-                                {% if client.client_active %}
-                                <td><span class="badge bg-success">Active</span></td>
+                                {% if invoice.invoice_status == "1" %}
+                                <td><span class="badge bg-danger">DRAFT</span></td>
                                 {% else %}
-                                <td><span class="badge bg-danger">Inactive</span></td>
+                                <td><span class="badge bg-success">PAID</span></td>
                                 {% endif %}
-                                <td><a class="link-primary text-decoration-none" href="{% url 'clients:detail' client.pk %}">{{ client.client_name }}</a></td>
-                                <td>{{ client.client_email }}</td>
-                                <td>{{ client.client_phone }}</td>
-                                <td>{{ client.client_invoice_balance }}</td>
+                                <td><a class="link-primary text-decoration-none" href="{% url 'invoices:detail' invoice.pk %}">{{ invoice.invoice_number }}</a></td>
+                                <td>{{ invoice.client_id }}</td>
+                                <td>{{ invoice.invoice_phone }}</td>
+                                <td>{{ invoice.invoice_total }}</td>
                                 <td>
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-cog"></i> Options
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                          <li><a class="dropdown-item" href="{% url 'clients:update' client.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                                          <li><a class="dropdown-item" href="{% url 'invoices:update' invoice.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
                                           <li>
-                                            <a class="dropdown-item" hx-get="{% url 'clients:delete' client.pk %}" style="cursor:pointer"
+                                            <a class="dropdown-item" hx-get="{% url 'invoices:delete' invoice.pk %}" style="cursor:pointer"
                                             hx-target="#modals-here" hx-trigger="click"
                                             data-bs-toggle="modal" data-bs-target="#modals-here"><i class="fa fa-trash"></i> Delete</a>
                                           </li>

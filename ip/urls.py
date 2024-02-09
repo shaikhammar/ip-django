@@ -23,4 +23,6 @@ urlpatterns = [
     path('', include('home.urls')),
     path('user/', include('users.urls')),
     path('client/', include('clients.urls')),
+    path('address/', include('address.urls')),
+    path('invoice/', include('invoices.urls')),
 ]

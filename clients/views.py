@@ -1,8 +1,9 @@
 from typing import Any
 from django.db.models.query import QuerySet
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -61,3 +62,56 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
         self.object.client_active = False
         self.object.save()
         return HttpResponseRedirect(success_url)
+    
+@method_decorator(never_cache, name="dispatch")
+class ClientAddressView(LoginRequiredMixin, DetailView):
+    model = Client
+    template_name = "client_address.html"
+    
+    def get_object(self, request, queryset=None):
+        """
+        Return the object the view is displaying.
+        Require `self.queryset` and a `pk` or `slug` argument in the URLconf.
+        Subclasses can override this to return any object.
+        """
+        # Use a custom queryset if provided; this is required for subclasses
+        # like DateDetailView
+        if queryset is None:
+            queryset = self.get_queryset()
+        # Next, try looking up by primary key.
+        pk=self.kwargs.get(self.pk_url_kwarg)
+        if(request.GET.get('client_id')):
+            pk = request.GET.get('client_id')
+        else:
+            pk = 5
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+        # Next, try looking up by slug.
+        if slug is not None and (pk is None or self.query_pk_and_slug):
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
+        # If none of those are defined, it's an error.
+        if pk is None and slug is None:
+            raise AttributeError(
+                "Generic detail view %s must be called with either an object "
+                "pk or a slug in the URLconf." % self.__class__.__name__
+            )
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(
+                _("No %(verbose_name)s found matching the query")
+                % {"verbose_name": queryset.model._meta.verbose_name}
+            )
+        return obj
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(request)
+        context = self.get_context_data(object=self.object)
+        # print(self.object.client_address)
+        # print(context)
+        context['client_address'] = self.object.client_address
+        context['client_currency'] = self.object.client_currency
+        return self.render_to_response(context)

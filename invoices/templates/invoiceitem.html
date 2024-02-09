@@ -1,0 +1,30 @@
+<tr id="invoice_item-{{ row_num }}">
+    <input type="hidden" name="invoiceitem_set-{{ row_num }}-id" id="id_invoiceitem_set-{{ row_num }}-id">
+    
+        <td>
+            <textarea name="invoiceitem_set-{{ row_num }}-item_description" cols="40" rows="2" required="required" class="form-control mx-1" id="id_invoiceitem_set-{{ row_num }}-item_description"></textarea>
+            
+        </td>
+    
+        <td>
+            <input type="number" name="invoiceitem_set-{{ row_num }}-item_quantity" step="0.01" required="required" class="form-control mx-1" id="id_invoiceitem_set-{{ row_num }}-item_quantity">
+            
+        </td>
+    
+        <td>
+            <input type="number" name="invoiceitem_set-{{ row_num }}-item_price_0" step="0.01" required="required" class="form-control mx-1" id="id_invoiceitem_set-{{ row_num }}-item_price_0">
+            
+        </td>
+    
+        <td>
+            <input type="number" name="invoiceitem_set-{{ row_num }}-item_total_0" step="0.01" required="required" class="form-control mx-1" id="id_invoiceitem_set-{{ row_num }}-item_total_0">
+            
+        </td>
+    
+        {% comment %} <td>
+            <input type="checkbox" name="invoiceitem_set-{{ row_num }}-DELETE" id="id_invoiceitem_set-{{ row_num }}-DELETE">
+            
+        </td> {% endcomment %}
+</tr>
+
+<input type="hidden" name="invoiceitem_set-TOTAL_FORMS" value={{ invoiceitem_set_TOTAL_FORMS }} id="id_invoiceitem_set-TOTAL_FORMS">

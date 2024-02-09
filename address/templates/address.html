@@ -1,0 +1,10 @@
+<option value="" selected="">---------</option>
+{% if states %}
+    {% for state in states %}
+    <option value="{{ state.id }}">{{ state }}</option>
+    {% endfor %}
+{% elif cities %}
+    {% for city in cities %}
+    <option value="{{ city.id }}">{{ city }}</option>
+    {% endfor %}
+{% endif %}

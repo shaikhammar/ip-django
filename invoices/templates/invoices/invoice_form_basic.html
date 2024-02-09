@@ -1,0 +1,26 @@
+{% extends "home.html" %}
+{% load crispy_forms_tags %}
+{% load django_htmx %}
+{% block maincontent %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container">
+            
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {{ form.errors }}  <!-- Display form-level errors -->
+                {{ invoice_item.management_form }}
+                {% for forms in invoice_item %}
+                    {{ forms.as_table }}
+                    {% comment %} {{ forms.errors }}  <!-- Display formset-level errors --> {% endcomment %}
+                {% endfor %}
+                <button type="submit">Save</button>
+            </form>
+        </div>
+        </div>
+            {% comment %} {% endfor %} {% endcomment %}
+        </div>
+    </main>
+</div>
+{% endblock maincontent %}

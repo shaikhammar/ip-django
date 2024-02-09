@@ -6,12 +6,6 @@ from cities_light.receivers import connect_default_signals
 from cities_light.settings import ICity
 
 
-class AddressRegionManager(BaseManager):
-    def get_queryset(self):
-        return super().get_queryset()
-    
-
-
 class Country(AbstractCountry):
     def __str__(self):
         display_name = getattr(self, 'name', None)
@@ -21,8 +15,6 @@ class Country(AbstractCountry):
 connect_default_signals(Country)
 
 class Region(AbstractRegion):
-    
-    # region = AddressRegionManager()
     
     def __str__(self):
         display_name = getattr(self, 'name', None)

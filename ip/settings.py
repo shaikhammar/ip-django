@@ -42,10 +42,12 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'cities_light',
     'address',
+    'djmoney',
 
     'users.apps.UsersConfig',
     'home.apps.HomeConfig',
     'clients.apps.ClientsConfig',
+    'invoices.apps.InvoicesConfig',
 ]
 
 
@@ -162,3 +164,5 @@ CITIES_LIGHT_APP_NAME = "address"
 MIGRATION_MODULES = {
     'cities_light': None
     }
+
+

@@ -1,0 +1,18 @@
+{% extends "home.html" %}
+{% load crispy_forms_tags %}
+{% load django_htmx %}
+{% block maincontent %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container">
+            
+            <form method="post">
+                {% crispy form %}
+                {{ form.errors }}
+            </form>
+        </div>
+        </div>
+        </div>
+    </main>
+</div>
+{% endblock maincontent %}
