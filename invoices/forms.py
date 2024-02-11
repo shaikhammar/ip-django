@@ -72,7 +72,7 @@ class InvoiceForm(forms.ModelForm):
                                 'invoice_number'
                             ),
                             FloatingField(
-                                'invoice_total'
+                                'invoice_total', readonly=True
                             ),
                             css_class="card-body"
                         ),
@@ -127,6 +127,7 @@ class InvoiceItemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['item_description'].widget = forms.widgets.Textarea(attrs={'rows': 2, 'cols': 40})
+        self.fields['item_total'].widget.attrs['readonly'] = True
         
             
     def clean(self):
