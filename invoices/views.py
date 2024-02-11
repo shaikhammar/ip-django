@@ -9,7 +9,7 @@ from django.views.decorators.cache import never_cache
 from django.urls import reverse_lazy
 from invoices.forms import InvoiceForm, InvoiceItemFormSet, InvoiceItemFormSetHelper
 from invoices.models import Invoice
-from django.db import transaction
+from django.contrib.messages.views import SuccessMessageMixin
 
 @method_decorator(never_cache, name="dispatch")
 class InvoiceListView(LoginRequiredMixin, ListView):
@@ -38,12 +38,13 @@ class InvoiceDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'Invoice'
     
 @method_decorator(never_cache, name="dispatch")
-class InvoiceCreateView(LoginRequiredMixin, CreateView):
+class InvoiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Invoice
     form_class = InvoiceForm
     success_url = reverse_lazy("invoices:list")
     extra_context = {'title' : "Invoice"}
     initial = {'invoice_status' : '1'}
+    success_message = "Invoice %(invoice_number)s was created successfully"
         
     def get_context_data(self, **kwargs):
         data = super(InvoiceCreateView, self).get_context_data(**kwargs)
@@ -67,11 +68,12 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
             return self.form_invalid(form)
 
 @method_decorator(never_cache, name="dispatch")
-class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
+class InvoiceUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Invoice
     form_class = InvoiceForm
     success_url = reverse_lazy("invoices:list")
     extra_context = {'title' : "Invoice"}
+    success_message = "Invoice %(invoice_number)s was updated successfully"
     
     def get_context_data(self, **kwargs):
         data = super(InvoiceUpdateView, self).get_context_data(**kwargs)
@@ -85,6 +87,7 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
+        self.object.invoice_status = 3
         invoice_item = context['invoice_item']
         if form.is_valid() and invoice_item.is_valid():
             self.object = form.save()
