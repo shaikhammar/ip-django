@@ -43,7 +43,7 @@ class InvoiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = InvoiceForm
     success_url = reverse_lazy("invoices:list")
     extra_context = {'title' : "Invoice"}
-    initial = {'invoice_status' : '1'}
+    initial = {'invoice_status' : '1', 'invoice_total' : '0.00'}
     success_message = "Invoice %(invoice_number)s was created successfully"
         
     def get_context_data(self, **kwargs):
