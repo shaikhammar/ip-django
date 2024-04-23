@@ -1,13 +1,16 @@
 from django import forms
 from django.urls import reverse_lazy
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, HTML, Div, MultiField, Fieldset, Submit
+from crispy_forms.layout import Layout, HTML, Div, MultiField, Fieldset, Submit, Field
 from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.bootstrap import StrictButton
 from django.utils.translation import gettext_lazy as _
 from invoices.models import Invoice, InvoiceItem, next_invoice_number
+from crispy_forms.layout import Div
+
 
 DELETION_FIELD_NAME = "DELETE"
+Field.template = 'totalfield.html'
 
 class InvoiceForm(forms.ModelForm):
     class Meta:
@@ -71,9 +74,9 @@ class InvoiceForm(forms.ModelForm):
                             FloatingField(
                                 'invoice_number'
                             ),
-                            FloatingField(
-                                'invoice_total', readonly=True
-                            ),
+                            # FloatingField(
+                            #     'invoice_total', readonly=True
+                            # ),
                             css_class="card-body"
                         ),
                         css_class="card"
@@ -93,6 +96,24 @@ class InvoiceForm(forms.ModelForm):
                             HTML(
                                 "{% load crispy_forms_tags %}{% crispy invoice_item invoice_item_formset %}"
                             ),
+                            Div(
+                                Div(
+                                    css_class="col-sm-8"
+                                    ),
+                                Div(
+                                    Div(
+                                        Div(
+                                            Field(
+                                                'invoice_total', readonly=True
+                                            ),
+                                            css_class="card-body"
+                                        ),
+                                        css_class="card"
+                                    ),
+                                    css_class="col-sm-4"
+                                ),
+                                css_class="row mt-2"
+                            ),
                             css_class="card-body"
                         ),
                         css_class="card"
@@ -106,7 +127,7 @@ class InvoiceForm(forms.ModelForm):
                             Div(
                                 HTML("<input type='number' step='1' class='form-control mt-3' id='rowCount' placeholder=''>"),
                                 StrictButton(
-                                    "Add row",
+                                    "Add row(s)",
                                     css_id = "addRowButton",
                                     css_class = "btn btn-primary mt-3"
                                 ),
@@ -151,7 +172,7 @@ class InvoiceItemForm(forms.ModelForm):
         if item_price is None:
             raise forms.ValidationError("Item price cannot be blank.")
 
-        print("Cleaned Data:", cleaned_data)
+        # print("Cleaned Data:", cleaned_data)
         return cleaned_data
     
 class InvoiceItemInlineFormset(forms.BaseInlineFormSet):

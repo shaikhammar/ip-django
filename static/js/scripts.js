@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
       if(total != 0){
-        invoiceTotalInput.value = total.toFixed(2);
+        document.getElementById('id_invoice_total').value = total.toFixed(2);
       }
     }
 
@@ -130,3 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
     observeChanges();
     setupListeners();
   });
+
+document.querySelectorAll('.numberinput').forEach(function(input) {
+    input.addEventListener('change', updateTotals);
+});
