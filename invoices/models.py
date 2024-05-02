@@ -16,15 +16,16 @@ def next_invoice_number():
 
 class Invoice(models.Model):
     
-    INVOICE_STATUS = {"0" : "DELETE",
-                      "1" : "DRAFT",
-                      "2" : "SENT",
-                      "3" : "REVISE",
-                      "4" : "PAID"}
+    INVOICE_STATUSES = {1 : "DRAFT",
+                      2 : "SENT",
+                      3 : "REVISED",
+                      4 : "PAID",
+                      5 : "DELETED",
+                      6 : "CANCELLED",}
     
     invoice_issue_date = models.DateField(_("issue date"), auto_now=False, auto_now_add=False, blank=False, null=False)
     invoice_number = models.CharField(_("invoice number"), max_length=50, unique=True, blank=False, null=False, default = next_invoice_number)
-    invoice_status = models.CharField(_("status"), max_length = 150, choices = INVOICE_STATUS)
+    invoice_status = models.CharField(_("status"), max_length = 150, choices = INVOICE_STATUSES)
     invoice_total = models.DecimalField(_("total"), max_digits=14, decimal_places=2, blank=False, null=False)
     invoice_date_created = models.DateTimeField(_("created date"), auto_now=False, auto_now_add=True)
     invoice_date_modified = models.DateTimeField(_("modified date"), auto_now=True, auto_now_add=False)

@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 0.5in;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        /* Add any additional styles here */
+    </style>
+  </head>
+  <body>
+    <main>
+        <table style="margin-bottom: 20px">
+            <tr>
+                <td colspan="99">
+                    <table style="margin-bottom: 20px">
+                        <tr>
+                            <td style="font-weight: bold; font-size: 24px; text-align: left; color: #00B0F0">{{ title|upper }}</td>
+                            <td style="text-align: right">
+                                <img src="/home/ip-django/static/AM_logo.svg" style="width: 200px; max-width: 200px" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="margin-bottom: 20px">
+                        <tr>
+                            <td style="width: 1px; white-space: nowrap"; colspan=150>
+                                <p style="font-weight: bold; color: #EA592C">Ahmed Manzoor</p>
+                                <div>1550 Como Park Blvd<br/>
+                                    Depew NY 14043<br/>
+                                    Phone: +1 984 349 2567<br/>
+                                    ahmedmanzooor@gmail.com</div>
+                                <div></br></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 1px; white-space: nowrap" colspan=150>
+                                <p style="font-weight: bold">To:</p>
+                                <p style="font-weight: bold; color: #22B960">{{ invoice.client_id.client_name }}</p>
+                                <div>{{ invoice.client_id.client_address|linebreaks }}</div>
+                                <div>{{ recipient.identifier }}</div>
+                            </td>
+                            <td style="text-align: right" colspan=150>
+                                <p style="font-weight: bold"> Invoice date</p>
+                                <div style="margin-bottom: 10px">{{ invoice.invoice_issue_date|date:"m-d-Y" }}</div>
+                                <p style="font-weight: bold"> Invoice number</p>
+                                <div style="margin-bottom: 10px">{{ invoice.invoice_number }}</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table style="margin-bottom: 20px">
+            <tr style="border: solid black">
+                <td style="padding: 5px 10px; white-space: nowrap; width: 300px; font-weight: bold" colspan="100">Description</td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; font-weight: bold" colspan="20">Quantity</td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; font-weight: bold" colspan="30">Unit Price</td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; font-weight: bold" colspan="30">Total in {{ invoice.client_id.client_currency }}</td>
+            </tr>
+            {% for invoiceitem in invoiceitems %}
+            <tr style="border: solid black">
+                <td style="padding: 5px 10px; white-space: nowrap; width: 300px" colspan="100">{{ invoiceitem.item_description|linebreaks }}</td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; text-align: right" colspan="20">{{ invoiceitem.item_quantity }}</td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; text-align: right" colspan="30">{{ invoiceitem.item_price }}</td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; text-align: right" colspan="30">{{ invoiceitem.item_total }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 300px" colspan="100"></td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px" colspan="10"></td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; font-weight: bold; text-align: right" colspan="40">Total in {{ invoice.client_id.client_currency }}</td>
+                <td style="padding: 5px 10px; white-space: nowrap; width: 80px; font-weight: bold; border: solid black; text-align: right" colspan="30">{{ invoice.invoice_total }}</td>
+            </tr>
+            <tr>
+                <td colspan="99">
+                    <p style="font-weight: bold; padding-top: 20px">Note</p>
+                    <div>To be paid into my Paypal a/c .<br />
+                        Paypal email id: ahmedmanzooor56@gmail.com<br />
+                        Thank you for your business!</div>
+                </td>
+            </tr>
+        </table>
+    </main>
+        <script src="index.js"></script>
+  </body>
+</html>

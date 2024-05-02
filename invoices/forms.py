@@ -6,6 +6,7 @@ from crispy_bootstrap5.bootstrap5 import FloatingField
 from crispy_forms.bootstrap import StrictButton
 from django.utils.translation import gettext_lazy as _
 from invoices.models import Invoice, InvoiceItem, next_invoice_number
+from clients.models import Client
 from crispy_forms.layout import Div
 
 
@@ -24,6 +25,7 @@ class InvoiceForm(forms.ModelForm):
                                                                                 'type': 'date', 'placeholder': 'mm/dd/yyyy',
                                                                                 })
         self.fields['invoice_status'].widget = forms.HiddenInput()
+        self.fields['client_id'].queryset = Client.objects.filter(client_active = True)
         self.helper = FormHelper(self)
         self.helper.form_tag = False
         self.helper.layout = Layout(

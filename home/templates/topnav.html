@@ -25,8 +25,8 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarCogs" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Invoices</a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarCogs">
-                <li><a class="dropdown-item" href="#">Create Invoice</a></li>
-                <li><a class="dropdown-item" href="#">View Invoices</a></li>
+                <li><a class="dropdown-item" href="{% url 'invoices:create' %}">Create Invoice</a></li>
+                <li><a class="dropdown-item" href="{% url 'invoices:list' %}">View Invoices</a></li>
             </ul>
         </li>
     </ul>
