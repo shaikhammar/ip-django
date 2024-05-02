@@ -23,9 +23,13 @@
 
                 <div class="headerbar-item float-end mx-2">
                     <div class="btn-group btn-group-sm index-options">
-                        <a href="{% url 'invoices:list' active='active' %}" class="btn btn-outline-primary {% if active == "active" %}active{% endif %}">Active</a>
-                        <a href="{% url 'invoices:list' active='inactive' %}" class="btn btn-outline-primary {% if active == "inactive" %}active{% endif %}">Inactive</a>
-                        <a href="{% url 'invoices:list' %}" class="btn btn-outline-primary {% if not active %}active{% endif %}">All</a>
+                        <a href="{% url 'invoices:list' status='1' %}" class="btn btn-outline-primary {% if status == "1" %}active{% endif %}">Draft</a>
+                        <a href="{% url 'invoices:list' status='2' %}" class="btn btn-outline-primary {% if status == "2" %}active{% endif %}">Sent</a>
+                        <a href="{% url 'invoices:list' status='3' %}" class="btn btn-outline-primary {% if status == "3" %}active{% endif %}">Revised</a>
+                        <a href="{% url 'invoices:list' status='4' %}" class="btn btn-outline-primary {% if status == "4" %}active{% endif %}">Paid</a>
+                        <a href="{% url 'invoices:list' status='5' %}" class="btn btn-outline-primary {% if status == "5" %}active{% endif %}">Deleted</a>
+                        <a href="{% url 'invoices:list' status='6' %}" class="btn btn-outline-primary {% if status == "6" %}active{% endif %}">Cancelled</a>
+                        <a href="{% url 'invoices:list' %}" class="btn btn-outline-primary {% if not status %}active{% endif %}">All</a>
                     </div>
                 </div>
 
@@ -58,9 +62,17 @@
                             {% for invoice in invoices %}
                             <tr>
                                 {% if invoice.invoice_status == "1" %}
-                                <td><span class="badge bg-danger">DRAFT</span></td>
+                                <td><span class="badge bg-danger">{{invoice.INVOICE_STATUSES.1}}</span></td>
+                                {% elif invoice.invoice_status == "2" %}
+                                <td><span class="badge bg-primary">{{invoice.INVOICE_STATUSES.2}}</span></td>
+                                {% elif invoice.invoice_status == "3" %}
+                                <td><span class="badge bg-primary">{{invoice.INVOICE_STATUSES.3}}</span></td>
+                                {% elif invoice.invoice_status == "4" %}
+                                <td><span class="badge bg-success">{{invoice.INVOICE_STATUSES.4}}</span></td>
+                                {% elif invoice.invoice_status == "5" %}
+                                <td><span class="badge bg-secondary">{{invoice.INVOICE_STATUSES.5}}</span></td>
                                 {% else %}
-                                <td><span class="badge bg-success">PAID</span></td>
+                                <td><span class="badge bg-secondary">{{invoice.INVOICE_STATUSES.6}}</span></td>
                                 {% endif %}
                                 <td><a class="link-primary text-decoration-none" href="{% url 'invoices:detail' invoice.pk %}">{{ invoice.invoice_number }}</a></td>
                                 <td>{{ invoice.client_id }}</td>

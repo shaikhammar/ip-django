@@ -1,27 +1,10 @@
 {% extends "home.html" %}
 {% load static %}
 
-{% block maincontent %}
+{% block body %}
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid px-4">
-            <div id="headerbar">
-                <h1 class="headerbar-title">{{ title }}</h1>
-
-                <div class="headerbar-item float-end mx-2">
-                    <a class="btn btn-sm btn-primary" href="{% url 'invoices:detailpdf' invoice.pk%}" target="_blank">PDF</a>
-                </div>
-
-                <div class="headerbar-item float-end mx-2">
-                    <a class="btn btn-sm btn-primary" href="{% url 'invoices:update' invoice.pk%}">
-                        <i class="fa fa-plus"></i>Edit</a>
-                </div>
-
-                <div class="headerbar-item float-end mx-2">
-                    <a class="btn btn-sm btn-primary" href="{% url 'invoices:create' %}">
-                        <i class="fa fa-plus"></i>New</a>
-                </div>
-            </div>
             <div class="invoice-box">
             <table style="padding: 60px">
                 <thead>
@@ -30,8 +13,9 @@
                             <table style="margin-bottom: 20px"><tr>
                                 <td style="font-weight: bold; font-size: 32px; text-align: left; color: #00B0F0">{{ title|upper }}</td>
                                 <td class="text-end" style="text-align: right">
-                                    <img src="{% static 'AM_logo.svg' %}" 
-                                    style="width: 100%; max-width: 200px" />
+                                    {% comment %} <img src="{% static 'AM_logo.svg' %}"  {% endcomment %}
+                                    <img src="/home/ip-django/static/AM_logo.svg" 
+                                    style="width: 100%; max-width: 100%;" />
                                 </td>
                             </tr></table>
                             
@@ -56,13 +40,16 @@
                                     <div>{{ recipient.identifier }}</div>
                                 </td>
                                 <td class="text-end">
+                                    {% comment %} {% for field in fields %} {% endcomment %}
                                     <div style="font-weight: bold"> Invoice date</div>
-                                    <div style="margin-bottom: 10px">{{ invoice.invoice_issue_date|date:"m-d-Y" }}</div>
+                                    <div style="margin-bottom: 10px">{{ invoice.invoice_date_created|date:"m-d-Y" }}</div>
                                     <div style="font-weight: bold"> Invoice number</div>
                                     <div style="margin-bottom: 10px">{{ invoice.invoice_number }}</div>
                                     {% for invoiceitem in invoiceitems %}
                                     {{ invoiceitem.item_description.label_tag }}<br />
                                     {% endfor %}
+
+                                    {% comment %} {% endfor %} {% endcomment %}
                                 </td>
                             </tr></table>
             
@@ -85,7 +72,7 @@
                     </tr>
                     {% for invoiceitem in invoiceitems %}
                     <tr>
-                        <td class="text-start border" style="padding: 5px 10px; white-space: width: 300px">{{ invoiceitem.item_description|linebreaks }}</td>
+                        <td class="text-start border" style="padding: 5px 10px; white-space: nowrap; width: 300px">{{ invoiceitem.item_description|linebreaks }}</td>
                         <td class="text-center align-middle border" style="padding: 5px 10px; white-space: nowrap; width: 80px">{{ invoiceitem.item_quantity }}</td>
                         <td class="text-center align-middle border" style="padding: 5px 10px; white-space: nowrap; width: 80px">{{ invoiceitem.item_price }}</td>
                         <td class="text-end align-middle border" style="padding: 5px 10px; white-space: nowrap; width: 80px">{{ invoiceitem.item_total }}</td>
@@ -120,4 +107,4 @@
     </div>
 </div>
 </div>
-{% endblock maincontent %}
+{% endblock body %}
