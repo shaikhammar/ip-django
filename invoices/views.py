@@ -1,4 +1,6 @@
 from typing import Any
+from django import forms
+from django.shortcuts import get_object_or_404
 from django.db.models.query import QuerySet
 from django.forms import ValidationError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -7,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.urls import reverse_lazy
-from invoices.forms import InvoiceForm, InvoiceItemFormSet, InvoiceItemFormSetHelper
+from invoices.forms import InvoiceForm, InvoiceItemForm, InvoiceItemFormSet, InvoiceItemFormSetHelper, InvoiceItemInlineFormset
 from invoices.models import Invoice, InvoiceItem
 from django.contrib.messages.views import SuccessMessageMixin
 from xhtml2pdf import pisa
@@ -41,36 +43,36 @@ class InvoiceDetailView(LoginRequiredMixin, DetailView):
         data['invoiceitems'] = InvoiceItem.objects.filter(invoice_id = self.object.id)
         return data
     
-@method_decorator(never_cache, name="dispatch")
-class InvoiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Invoice
-    form_class = InvoiceForm
-    success_url = reverse_lazy("invoices:list")
-    extra_context = {'title' : "Invoice"}
-    initial = {'invoice_status' : '1', 'invoice_total' : '0.00'}
-    success_message = "Invoice %(invoice_number)s was created successfully"
+# @method_decorator(never_cache, name="dispatch")
+# class InvoiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+#     model = Invoice
+#     form_class = InvoiceForm
+#     success_url = reverse_lazy("invoices:list")
+#     extra_context = {'title' : "Invoice"}
+#     initial = {'invoice_status' : '1', 'invoice_total' : '0.00'}
+#     success_message = "Invoice %(invoice_number)s was created successfully"
         
-    def get_context_data(self, **kwargs):
-        data = super(InvoiceCreateView, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data['invoice_item'] = InvoiceItemFormSet(self.request.POST)
-            data['invoice_item_formset'] = InvoiceItemFormSetHelper()
-        else:
-            data['invoice_item'] = InvoiceItemFormSet()
-            data['invoice_item_formset'] = InvoiceItemFormSetHelper()
-        return data
+#     def get_context_data(self, **kwargs):
+#         data = super(InvoiceCreateView, self).get_context_data(**kwargs)
+#         if self.request.POST:
+#             data['invoice_item'] = InvoiceItemFormSet(self.request.POST)
+#             data['invoice_item_formset'] = InvoiceItemFormSetHelper()
+#         else:
+#             data['invoice_item'] = InvoiceItemFormSet()
+#             data['invoice_item_formset'] = InvoiceItemFormSetHelper()
+#         return data
 
-    def form_valid(self, form):
-        context = self.get_context_data()
-        invoice_item = context['invoice_item']
-        if form.is_valid() and invoice_item.is_valid():
-            self.object = form.save()
-            invoice_item.instance = self.object
-            invoice_item.save()
-            return super().form_valid(form)
-        else:
-            return self.form_invalid(form)
-        
+#     def form_valid(self, form):
+#         context = self.get_context_data()
+#         invoice_item = context['invoice_item']
+#         if form.is_valid() and invoice_item.is_valid():
+#             self.object = form.save()
+#             invoice_item.instance = self.object
+#             invoice_item.save()
+#             return super().form_valid(form)
+#         else:
+#             return self.form_invalid(form)
+    
 @method_decorator(never_cache, name="dispatch")
 class InvoiceUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Invoice
@@ -152,3 +154,74 @@ class InvoiceDetailPDFView(LoginRequiredMixin, DetailView):
             return HttpResponse('Error generating PDF')
 
         return response
+    
+
+@method_decorator(never_cache, name="dispatch")
+class InvoiceCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Invoice
+    form_class = InvoiceForm
+    success_url = reverse_lazy("invoices:list")
+    extra_context = {'title' : "Invoice"}
+    initial = {'invoice_status' : '1', 'invoice_total' : '0.00'}
+    success_message = "Invoice %(invoice_number)s was created successfully"
+    
+    def clone_formset(self):
+        cloned_forms = []
+        if self.clone_id:
+            existing_invoice = get_object_or_404(Invoice, pk=self.clone_id)
+            for item in existing_invoice.invoiceitem_set.all():
+                form = InvoiceItemFormSet().form(instance=item)
+                cloned_forms.append(form)
+        return cloned_forms
+
+    def dispatch(self, request, *args, **kwargs):
+        if kwargs.get('pk'):
+            self.clone_id = kwargs.get('pk')  # Get the ID to clone, if provided
+        else:
+            self.clone_id = None
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial_data = super(InvoiceCreateView, self).get_initial()
+        if self.clone_id:
+            # If an invoice number is provided, retrieve the existing invoice
+            existing_invoice = get_object_or_404(Invoice, pk=self.clone_id)
+            # Populate initial data with the existing invoice's data
+            initial_data['client_id'] = existing_invoice.client_id
+            initial_data['invoice_issue_date'] = existing_invoice.invoice_issue_date
+            # Populate other fields as needed
+        return initial_data
+
+    def get_context_data(self, **kwargs):
+        data = super(InvoiceCreateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data['invoice_item'] = InvoiceItemFormSet(self.request.POST)
+            data['invoice_item_formset'] = InvoiceItemFormSetHelper()
+        else:
+            if self.clone_id:
+                # If an invoice number is provided, retrieve the existing invoice
+                cloned_forms = self.clone_formset()
+                initial_forms = []
+                for form in cloned_forms:
+                    form.initial['id'] = ''
+                    form.initial['invoice_id'] = ''
+                    initial_forms.append(form.initial)
+                form_count = len(initial_forms) + 2 #Adding 2 extra rows
+                CloneInvoiceItemFormSet = forms.models.inlineformset_factory(Invoice, InvoiceItem, form=InvoiceItemForm, formset=InvoiceItemInlineFormset, extra=form_count, can_delete=True, can_delete_extra=True)
+                data['invoice_item'] = CloneInvoiceItemFormSet(initial=initial_forms)
+            else:
+                data['invoice_item'] = InvoiceItemFormSet()
+            data['invoice_item_formset'] = InvoiceItemFormSetHelper()
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        invoice_item = context['invoice_item']
+        if form.is_valid() and invoice_item.is_valid():
+            self.object = form.save()
+            invoice_item.instance = self.object
+            invoice_item.save()
+            return super().form_valid(form)
+        else:
+            print("Form or formset is invalid:", form.errors, invoice_item.errors)
+            return self.form_invalid(form)

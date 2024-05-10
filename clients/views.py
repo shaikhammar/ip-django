@@ -2,15 +2,15 @@ from typing import Any
 from django.db.models.query import QuerySet
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.views.generic.detail import SingleObjectMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.urls import reverse_lazy
 from clients.forms import ClientForm
-
 from clients.models import Client
+from invoices.models import Invoice
+from django.db.models import Sum
 
 @method_decorator(never_cache, name="dispatch")
 class ClientListView(LoginRequiredMixin, ListView):
@@ -38,6 +38,16 @@ class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
     context_object_name = 'client'
     
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(ClientDetailView, self).get_context_data(**kwargs)
+        # print(Invoice.objects.filter(client_id = self.object.pk))
+        context['invoices'] = Invoice.objects.filter(client_id = self.object.pk)
+        context['client_invoice_total'] = Invoice.objects.filter(invoice_status__in = [2,3]).aggregate(Sum("invoice_total", default=0)).get('invoice_total__sum')
+        context['client_invoice_paid'] = context['client_invoice_total']
+        context['client_invoice_balance'] = context['client_invoice_total'] - context['client_invoice_paid']
+        return context
+        
 @method_decorator(never_cache, name="dispatch")
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
@@ -110,8 +120,6 @@ class ClientAddressView(LoginRequiredMixin, DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(request)
         context = self.get_context_data(object=self.object)
-        # print(self.object.client_address)
-        # print(context)
         context['client_address'] = self.object.client_address
         context['client_currency'] = self.object.client_currency
         return self.render_to_response(context)

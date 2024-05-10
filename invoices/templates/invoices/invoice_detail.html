@@ -6,20 +6,26 @@
     <main>
         <div class="container-fluid px-4">
             <div id="headerbar">
-                <h1 class="headerbar-title">{{ title }}</h1>
+                {% comment %} <h1 class="headerbar-title">{{ title }}</h1> {% endcomment %}
 
                 <div class="headerbar-item float-end mx-2">
-                    <a class="btn btn-sm btn-primary" href="{% url 'invoices:detailpdf' invoice.pk%}" target="_blank">PDF</a>
+                    <a class="btn btn-sm btn-success" href="{% url 'invoices:detailpdf' invoice.pk%}" target="_blank">
+                        <i class="fa fa-file-pdf"></i> PDF</a>
                 </div>
 
                 <div class="headerbar-item float-end mx-2">
                     <a class="btn btn-sm btn-primary" href="{% url 'invoices:update' invoice.pk%}">
-                        <i class="fa fa-plus"></i>Edit</a>
+                        <i class="fa fa-edit"></i> Edit</a>
                 </div>
 
-                <div class="headerbar-item float-end mx-2">
+                {% comment %} <div class="headerbar-item float-end mx-2">
                     <a class="btn btn-sm btn-primary" href="{% url 'invoices:create' %}">
-                        <i class="fa fa-plus"></i>New</a>
+                        <i class="fa fa-plus"></i> New</a>
+                </div> {% endcomment %}
+
+                <div class="headerbar-item float-end mx-2">
+                    <a class="btn btn-sm btn-primary" href="{% url 'invoices:clone' invoice.pk %}">
+                        <i class="fa fa-clone"></i> Clone</a>
                 </div>
             </div>
             <div class="invoice-box">

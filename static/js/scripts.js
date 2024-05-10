@@ -131,6 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupListeners();
   });
 
-document.querySelectorAll('.numberinput').forEach(function(input) {
-    input.addEventListener('change', updateTotals);
-});
+// document.querySelectorAll('.numberinput').forEach(function(input) {
+//     input.addEventListener('change', updateTotals());
+// });
