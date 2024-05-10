@@ -8,8 +8,8 @@
                 <h1 class="headerbar-title">{{ title }}</h1>
 
                 <div class="headerbar-item float-end mx-2">
-                    <a class="btn btn-sm btn-primary" href="{% url 'invoices:create' %}">
-                        <i class="fa fa-plus"></i>New</a>
+                    <a class="btn btn-sm btn-success" href="{% url 'invoices:create' %}">
+                        <i class="fa fa-plus"></i> New</a>
                 </div>
 
                 <div class="headerbar-item float-end mx-2">
@@ -85,6 +85,8 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                           <li><a class="dropdown-item" href="{% url 'invoices:update' invoice.pk %}"><i class="fa fa-edit"></i> Edit</a></li>
+                                          <li><a class="dropdown-item" href="{% url 'invoices:clone' invoice.pk %}"><i class="fa fa-clone"></i> Clone</a></li>
+                                          <li><a class="dropdown-item" href="{% url 'invoices:detailpdf' invoice.pk %}" target="_blank"><i class="fa fa-file-pdf"></i> Create PDF</a></li>
                                           <li>
                                             <a class="dropdown-item" hx-get="{% url 'invoices:delete' invoice.pk %}" style="cursor:pointer"
                                             hx-target="#modals-here" hx-trigger="click"

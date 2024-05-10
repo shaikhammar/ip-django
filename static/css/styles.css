@@ -11314,8 +11314,8 @@ body {
   transform: translateX(-225px);
 }
 #layoutSidenav #layoutSidenav_content {
-  position: relative;
-  display: flex;
+  /* position: relative; */
+  /* display: flex; */
   flex-direction: column;
   justify-content: space-between;
   min-width: 0;
