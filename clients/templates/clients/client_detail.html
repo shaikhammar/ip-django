@@ -11,6 +11,8 @@
         <div class="headerbar-item float-end mx-2">
           <a class="btn btn-sm btn-outline-primary" href="{% url 'invoices:create'%}">
             <i class="fa-solid fa-file-invoice-dollar"></i> Create Invoice</a>
+            <button id="extractInvoiceBtn" class="btn btn-sm btn-outline-primary">
+              <i class="fa-solid fa-file-pdf"></i> Extract Invoice</button>
           <a class="btn btn-sm btn-primary" href="{% url 'clients:update' client.pk%}">
             <i class="fa-solid fa-pen-to-square"></i> Edit</a>
           <a class="btn btn-sm btn-danger" hx-get="{% url 'clients:delete' client.pk %}" style="cursor:pointer"
@@ -240,14 +242,81 @@
         </div>
       </div>
   </main>
-  <div id="modals-here"
-    class="modal modal-blur fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content"></div>
+</div>
+
+<!-- Modal structure -->
+<div class="modal fade" id="extractInvoiceModal" tabindex="-1" aria-labelledby="extractInvoiceModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="extractInvoiceModalLabel">Extract Invoice Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="extractInvoiceModalBody">
+        <!-- Form will be loaded here -->
+      </div>
     </div>
   </div>
 </div>
+
+<div id="modals-here"
+  class="modal modal-blur fade"
+  style="display: none"
+  aria-hidden="false"
+  tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content"></div>
+  </div>
+</div>
 {% endblock maincontent %}
+
+{% block extrascripts %}
+<script>
+  document.getElementById('extractInvoiceBtn').addEventListener('click', function() {
+    fetch("{% url 'clients:extract_invoice' %}")  // URL to the view that renders the form
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('extractInvoiceModalBody').innerHTML = html;
+        var modal = new bootstrap.Modal(document.getElementById('extractInvoiceModal'));
+        modal.show();
+
+        // Get the client ID from the URL
+        const url = window.location.href;
+        const clientId = url.split('/').pop(); // Get the last part of the URL
+        
+        // Set the value of the hidden field
+        document.getElementById('client_id').value = clientId;
+  
+        // Handle form submission via AJAX
+        document.getElementById('invoiceExtractorForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const form = event.target;
+          const formData = new FormData(form);
+          const fileInput = document.getElementById('id_file');
+          const file = fileInput.files[0]; // Get the first file selected by the user
+          formData.append('id_file', file); // Append the file data to the FormData object
+          formData.append('client_id', client_id.value);
+          console.log(formData);
+          fetch(form.action, {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => {
+            return response.json();
+          })
+          .then(data => {
+            if (data.success) {
+              alert('Invoice extracted successfully. Invoice ID: ' + data.data.invoice_number);
+              modal.hide();
+            } else {
+              alert('Error: ' + (data.error || 'Unknown error'));
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      })
+      .catch(error => console.error('Error loading form:', error));
+  });
+</script>
+{% endblock extrascripts %}
+

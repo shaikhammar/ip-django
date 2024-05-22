@@ -1,0 +1,6 @@
+{% load crispy_forms_tags %}
+<form id="invoiceExtractorForm" method="post" enctype="multipart/form-data" action="{% url 'clients:extract_invoice' %}">
+  {% csrf_token %}
+  <div class="mb-3">{{ form | crispy }}</div>
+  <button type="submit">Extract Invoice Data</button>
+</form>
