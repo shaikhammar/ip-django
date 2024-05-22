@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from clients.views import ClientAddressView, ClientListView, ClientCreateView, ClientUpdateView, ClientDeleteView, ClientDetailView
+from clients.views import ClientAddressView, ClientListView, ClientCreateView, ClientUpdateView, ClientDeleteView, ClientDetailView, PDFDataExtractorView
 
 app_name = "clients"
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('delete/<int:pk>', ClientDeleteView.as_view(), name = "delete"),
     path('address', ClientAddressView.as_view(), name = "address"),
     re_path('^_address/(?P<client_id>[0-9]+)/$', ClientAddressView.as_view(), name = "address"),
+    path('extract-invoice/', PDFDataExtractorView.as_view(), name='extract_invoice'),
 ]

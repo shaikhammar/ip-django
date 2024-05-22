@@ -18,3 +18,7 @@ class ClientForm(forms.ModelForm):
             else:
                 field.widget.attrs['class'] = 'form-control mb-3'
                 field.widget.attrs['placeholder'] = 'placeholder'
+                
+class InvoiceExtractionForm(forms.Form):
+    client_id = forms.CharField(widget=forms.HiddenInput())
+    file = forms.FileField(label='Upload PDF File:', required=True, allow_empty_file=False)
